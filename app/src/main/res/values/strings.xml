@@ -3,4 +3,7 @@
     <string name="todos">To-Dos</string>
     <string name="notes">Notes</string>
     <string name="reminders">Reminders</string>
+    <string name="add_todo">Add To-Do</string>
+    <string name="add_note">Add Note</string>
+    <string name="add_reminder">Add Reminder</string>
 </resources>
