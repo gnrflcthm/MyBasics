@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mybasics.models.Todo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TodoDBHelper extends SQLiteOpenHelper {
     private final String ID = "id";
     private final String CONTENT = "content";
     private final String STATUS = "status";
+    private final String DATE_ADDED = "date_added";
 
     private SQLiteDatabase db;
 
@@ -33,10 +35,11 @@ public class TodoDBHelper extends SQLiteOpenHelper {
                 "CREATE TABLE %s (" +
                 "%s TEXT PRIMARY_KEY," +
                 "%s TEXT NOT NULL," +
-                "%s INTEGER NOT NULL DEFAULT 0" +
+                "%s INTEGER NOT NULL DEFAULT 0," +
+                "%s TEXT NOT NULL" +
                 ")",
                 TABLE_NAME, ID,
-                CONTENT, STATUS);
+                CONTENT, STATUS, DATE_ADDED);
         db.execSQL(sql);
     }
 
@@ -56,7 +59,8 @@ public class TodoDBHelper extends SQLiteOpenHelper {
             String id = cursor.getString(0);
             String content = cursor.getString(1);
             boolean status = cursor.getInt(2) == 0 ? false : true;
-            todos.add(Todo.newInstance(id, content, status));
+            LocalDateTime dateAdded = LocalDateTime.parse(cursor.getString(3));
+            todos.add(Todo.newInstance(id, content, status, dateAdded));
         }
         cursor.close();
         db.close();
@@ -69,6 +73,7 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         cv.put(ID, todo.getId());
         cv.put(CONTENT, todo.getContent());
         cv.put(STATUS, todo.isCompleted() ? 1 : 0);
+        cv.put(DATE_ADDED, todo.getDateAdded().toString());
         long status = db.insert(TABLE_NAME, null, cv);
         db.close();
         return status == 0 ? false : true;
