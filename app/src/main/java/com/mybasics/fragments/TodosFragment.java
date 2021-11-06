@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.mybasics.R;
+import com.mybasics.adapters.TodoAdapter;
 
 public class TodosFragment extends IndexableFragment {
 
@@ -29,7 +29,7 @@ public class TodosFragment extends IndexableFragment {
     /**
      * Adapter to be used with recycler view
      */
-//    private TodoAdapter adapter;
+    private TodoAdapter adapter;
 
     public TodosFragment(Context ctx, int index) {
         super(index);
@@ -56,18 +56,15 @@ public class TodosFragment extends IndexableFragment {
                              Bundle savedInstanceState) {
         View todoFragment = inflater.inflate(R.layout.fragment_todos, container, false);
 
-        // initialize add button
-//        addButton = todoFragment.findViewById(R.id.btnAddTodo);
+        todoListView = todoFragment.findViewById(R.id.todoListView);
+        addButton = todoFragment.findViewById(R.id.btnAddTodo);
 
-        // initialize recycler view and adapter
-//        todoListView = todoFragment.findViewById(R.id.todoListView);
-//        adapter = new TodoAdapter(container.getContext());
+        addButton.setOnClickListener(this::showAddModal);
 
-        // set adapter and layout manager for recycler view
-//        todoListView.setAdapter(adapter);
-//        todoListView.setLayoutManager(new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false));
-//        todoListView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
-
+        adapter = new TodoAdapter(container.getContext());
+        todoListView.setAdapter(adapter);
+        todoListView.setLayoutManager(new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false));
+        todoListView.addItemDecoration(new DividerItemDecoration(container.getContext(), DividerItemDecoration.VERTICAL));
 //        ItemTouchHelper touchHelper = new ItemTouchHelper(new TodoItemTouchHelperCallback(adapter, container));
 //        touchHelper.attachToRecyclerView(todoListView);
 
@@ -84,5 +81,9 @@ public class TodosFragment extends IndexableFragment {
 //        });
 
         return todoFragment;
+    }
+
+    private void showAddModal(View v) {
+
     }
 }
