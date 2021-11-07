@@ -14,16 +14,16 @@ import java.util.List;
 
 public class TodoDBHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "MyBasics.db";
-    private static final int DB_VERSION = 1;
+    private static final String DB_NAME = "MyBasics.db";    // Database File Name
+    private static final int DB_VERSION = 1;                // Database Version
 
-    private final String TABLE_NAME = "todos";
-    private final String ID = "id";
-    private final String CONTENT = "content";
-    private final String STATUS = "status";
-    private final String DATE_ADDED = "date_added";
+    private final String TABLE_NAME = "todos";              // Todos Table Name
+    private final String ID = "id";                         // ID Column Name
+    private final String CONTENT = "content";               // Content Column Name
+    private final String STATUS = "status";                 // Status Column Name
+    private final String DATE_ADDED = "date_added";         // Date Added Column Name
 
-    private SQLiteDatabase db;
+    private SQLiteDatabase db;                              // Database Object
 
     public TodoDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -50,6 +50,11 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Fetches all todos from the database and returns them as a list.
+     * Will return an empty ArrayList if there are no database entries.
+     * @return List of Todos
+     */
     public List<Todo> fetchTodos() {
         db = getReadableDatabase();
         List<Todo> todos = new ArrayList<>();
@@ -67,6 +72,11 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         return todos;
     }
 
+    /**
+     * Adds a to-do item to the databse.
+     * @param todo Item to add
+     * @return boolean indicating if item addition was successful.
+     */
     public boolean addTodo(Todo todo) {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -76,23 +86,33 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         cv.put(DATE_ADDED, todo.getDateAdded().toString());
         long status = db.insert(TABLE_NAME, null, cv);
         db.close();
-        return status == 0 ? false : true;
+        return status != -1;
     }
 
+    /**
+     * Deletes a to-do item from the databse.
+     * @param todo Item to delete
+     * @return boolean indicating if item deletion was successful.
+     */
     public boolean deleteTodo(Todo todo) {
         db = getWritableDatabase();
         int status = db.delete(TABLE_NAME, "id = ?", new String[] { todo.getId() });
         db.close();
-        return status == 0 ? false : true;
+        return status != 0;
     }
 
+    /**
+     * Updates a to-do item from the databse.
+     * @param todo Item to update
+     * @return boolean indicating if item update was successful.
+     */
     public boolean updateTodo(Todo todo) {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(CONTENT, todo.getContent());
         cv.put(STATUS, todo.isCompleted() ? true : false);
-        int status = db.update(TABLE_NAME, cv, "id = %s", new String[] {todo.getId()});
+        int status = db.update(TABLE_NAME, cv, "id = ?", new String[] {todo.getId()});
         db.close();
-        return status == 0 ? false : true;
+        return status != 0;
     }
 }

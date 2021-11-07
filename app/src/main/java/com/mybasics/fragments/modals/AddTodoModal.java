@@ -50,5 +50,4 @@ public class AddTodoModal extends BottomSheetDialogFragment {
         todoText.setText("");
     }
 
-
 }
