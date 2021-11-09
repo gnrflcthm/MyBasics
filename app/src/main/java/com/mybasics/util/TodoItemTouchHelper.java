@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TodoItemTouchHelper extends ItemTouchHelper {
 
-    private static Context context;
+    private Context context;
 
     private static View container;
 
@@ -33,19 +33,22 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
     }
 
     public TodoItemTouchHelper(Context context, TodoAdapter adapter, View container) {
-        super(new TodoSimpleCallback(0, LEFT | RIGHT, adapter));
+        super(new TodoSimpleCallback(0, LEFT | RIGHT, adapter, context));
         this.context = context;
         this.container = container;
     }
 
-    private static class TodoSimpleCallback extends ItemTouchHelper.SimpleCallback {
+    public static class TodoSimpleCallback extends ItemTouchHelper.SimpleCallback {
 
         private TodoAdapter adapter;
         private final int PADDING = 25;
+        private boolean toggled = false;
+        private Context context;
 
-        public TodoSimpleCallback(int dragDirs, int swipeDirs, TodoAdapter adapter) {
+        public TodoSimpleCallback(int dragDirs, int swipeDirs, TodoAdapter adapter, Context context) {
             super(dragDirs, swipeDirs);
             this.adapter = adapter;
+            this.context = context;
         }
 
         @Override
@@ -78,6 +81,7 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
                     break;
                 case RIGHT:
                     adapter.toggleTodo(position);
+                    toggled = true;
                     break;
             }
         }
@@ -87,20 +91,35 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
             View item = viewHolder.itemView;
+            Todo todo = adapter.getTodo(viewHolder.getAdapterPosition());
 
-            if (dX > 0) {
-                drawTodoToggle(c, item);
-            } else {
+            if (dX == 0 && toggled) {
+                toggled = false;
+            }
+            if (todo != null) {
+                if (isCurrentlyActive) {
+                    drawTodoToggle(c, item, todo.isCompleted());
+                } else {
+                    if (toggled) {
+                        drawTodoToggle(c, item, !todo.isCompleted());
+                    } else {
+                        drawTodoToggle(c, item, todo.isCompleted());
+                    }
+                }
+            }
+            if (dX < 0) {
                 drawDeleteTodo(c, item);
             }
         }
 
-        public void drawTodoToggle(Canvas canvas, View item) {
+        public void drawTodoToggle(Canvas canvas, View item, boolean isCompleted) {
+            int color = isCompleted ? R.color.red_accent_400 : R.color.green_accent_400;
+            int resId = isCompleted ? R.drawable.ic_baseline_close_24 : R.drawable.ic_baseline_check_24;
             ColorDrawable bg = new ColorDrawable();
-            bg.setColor(ContextCompat.getColor(context, R.color.green_accent_400));
+            bg.setColor(ContextCompat.getColor(context, color));
             bg.setBounds(item.getLeft(), item.getTop(), item.getRight(), item.getBottom());
             bg.draw(canvas);
-            Drawable icon = AppCompatResources.getDrawable(context, R.drawable.ic_baseline_check_24);
+            Drawable icon = AppCompatResources.getDrawable(context, resId);
             icon.setColorFilter(ContextCompat.getColor(context, R.color.black), PorterDuff.Mode.MULTIPLY);
             icon.setBounds(item.getLeft() + PADDING, item.getTop() + PADDING, item.getBottom() - item.getTop() - PADDING, item.getBottom() - PADDING);
             icon.draw(canvas);
