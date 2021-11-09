@@ -29,6 +29,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     private List<Todo> todos;   // List of To-Dos
 
+    private DeletedItemListener deletedItemListener;
+
     public TodoAdapter(Context context) {
         this.context = context;
         this.db = new TodoDBHelper(context);
@@ -44,15 +46,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     @NonNull
     @Override
     public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.todo_item_alt, parent, false);
-        TodoViewHolder viewHolder = new TodoViewHolder(view);
-        return viewHolder;
+        View view = LayoutInflater.from(context).inflate(R.layout.todo_item, parent, false);
+        return new TodoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-//        holder.setData(todos.get(position));
-        holder.setDataAlt(todos.get(position));
+        holder.setData(todos.get(position));
+//        holder.setDataAlt(todos.get(position));
     }
 
     @Override
@@ -70,6 +71,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     public Todo deleteTodo(int index) {
         Todo todo = todos.remove(index);
         notifyItemRemoved(index);
+        deletedItemListener.onItemDelete();
         return todo;
     }
 
@@ -92,6 +94,22 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         notifyItemChanged(position);
     }
 
+    public Todo getTodo(int position) {
+        try {
+            return todos.get(position);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public void setDeletedItemListener(DeletedItemListener deletedItemListener) {
+        this.deletedItemListener = deletedItemListener;
+    }
+
+    public interface DeletedItemListener {
+        void onItemDelete();
+    }
+
     protected static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView iconStatus;
@@ -101,10 +119,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
-//            iconStatus = view.findViewById(R.id.todoIconStatus);
+            iconStatus = view.findViewById(R.id.todoIconStatus);
             textContent = view.findViewById(R.id.todoTextContent);
-//            textStatus = view.findViewById(R.id.todoTextStatus);
-//            textDateAdded = view.findViewById(R.id.todoTextDateAdded);
+            textStatus = view.findViewById(R.id.todoTextStatus);
+            textDateAdded = view.findViewById(R.id.todoTextDateAdded);
         }
 
         private void setData(Todo todo) {

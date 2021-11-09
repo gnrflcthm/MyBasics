@@ -29,19 +29,13 @@ public class TodosFragment extends IndexableFragment {
 
     private TodoAdapter adapter;
 
-    public TodosFragment(Context ctx, int index) {
+    public TodosFragment(Context context, int index) {
         super(index);
-        this.context = ctx;
+        this.context = context;
     }
 
-    /**
-     * Creates an instant of TodosFragment with the specified index.
-     * @param index the position of the fragment.
-     * @return TodosFragment instance with the specified index.
-     */
     public static TodosFragment newInstance(Context context, int index) {
-        TodosFragment fragment = new TodosFragment(context, index);
-        return fragment;
+        return new TodosFragment(context, index);
     }
 
     @Override
@@ -61,7 +55,7 @@ public class TodosFragment extends IndexableFragment {
         addTodoModal = new AddTodoModal(this::addTodo);
         addButton.setOnClickListener(this::showAddModal);
 
-        initializeRecyclerView(context, container);
+        initializeRecyclerView(container);
 
         toggleEmptyList();
 
@@ -90,8 +84,10 @@ public class TodosFragment extends IndexableFragment {
         }
     }
 
-    private void initializeRecyclerView(Context context, View container) {
+    private void initializeRecyclerView(View container) {
         adapter = new TodoAdapter(context);
+        adapter.setDeletedItemListener(this::toggleEmptyList);
+
         todoListView.setAdapter(adapter);
         todoListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         todoListView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));

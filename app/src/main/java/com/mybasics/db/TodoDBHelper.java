@@ -63,7 +63,7 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             String id = cursor.getString(0);
             String content = cursor.getString(1);
-            boolean status = cursor.getInt(2) == 0 ? false : true;
+            boolean status = cursor.getInt(2) != 0;
             LocalDateTime dateAdded = LocalDateTime.parse(cursor.getString(3));
             todos.add(Todo.newInstance(id, content, status, dateAdded));
         }
@@ -90,7 +90,7 @@ public class TodoDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Deletes a to-do item from the databse.
+     * Deletes a to-do item from the database.
      * @param todo Item to delete
      * @return boolean indicating if item deletion was successful.
      */
@@ -110,7 +110,7 @@ public class TodoDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(CONTENT, todo.getContent());
-        cv.put(STATUS, todo.isCompleted() ? true : false);
+        cv.put(STATUS, todo.isCompleted());
         int status = db.update(TABLE_NAME, cv, "id = ?", new String[] {todo.getId()});
         db.close();
         return status != 0;
