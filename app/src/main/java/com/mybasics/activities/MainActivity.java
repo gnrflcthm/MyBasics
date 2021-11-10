@@ -1,11 +1,11 @@
 package com.mybasics.activities;
 
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-
-import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         exitOnNextBack = false;
-
         init();
     }
 
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         todos = TodosFragment.newInstance(this, 0);
-        notes = NotesFragment.newInstance(1);
+        notes = NotesFragment.newInstance(this, 1);
         reminders = RemindersFragment.newInstance(2);
 
         // Initially sets the Todos Fragment as the initial screen
@@ -209,5 +208,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return navId;
+    }
+
+    /**
+     * Method for toggling the visibility of the bottom navigation.
+     * Will mostly be used whe starting action mode to prevent switching
+     * between fragments.
+     * @param visibility mode of visibility to use.
+     *                   eg. View.VISIBLE, View.INVISIBLE, View.GONE
+     */
+    public void toggleBottomNavigation(int visibility) {
+        bottomNav.setVisibility(visibility);
     }
 }
