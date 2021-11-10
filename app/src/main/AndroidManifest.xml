@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBasics">
         <activity
+            android:name=".activities.NoteEditor"
+            android:exported="false" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,7 +24,7 @@
         </activity>
         <activity
             android:name=".activities.SplashScreen"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>
