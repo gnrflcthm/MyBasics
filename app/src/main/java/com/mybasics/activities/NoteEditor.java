@@ -77,7 +77,7 @@ public class NoteEditor extends AppCompatActivity {
     }
 
     private void returnOnClick(View v) {
-        verifyResults();
+        onPause();
     }
 
     @Override
@@ -89,17 +89,19 @@ public class NoteEditor extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        verifyResults();
+        onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        verifyResults();
+        onPause();
     }
 
     private void saveOnClick(View v) {
-        saveNote();
+        if (saveNote()) {
+            Toast.makeText(this, "Note Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void verifyResults() {
@@ -115,12 +117,16 @@ public class NoteEditor extends AppCompatActivity {
         finish();
     }
 
-    private void saveNote() {
-        String noteTitle = titleEdit.getText().toString();
-        note.setTitle(noteTitle.equals("") ? "Untitled Note" : noteTitle);
-        note.setContent(textEditor.getCachedHtml());
-        note.setDateLastModified(LocalDateTime.now());
-        Toast.makeText(this, "Note Saved", Toast.LENGTH_SHORT).show();
+    private boolean saveNote() {
+        try {
+            String noteTitle = titleEdit.getText().toString();
+            note.setTitle(noteTitle.equals("") ? "Untitled Note" : noteTitle);
+            note.setContent(textEditor.getCachedHtml());
+            note.setDateLastModified(LocalDateTime.now());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private void initializeTitle() {
