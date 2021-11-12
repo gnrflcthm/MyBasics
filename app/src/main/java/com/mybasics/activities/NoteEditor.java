@@ -89,13 +89,11 @@ public class NoteEditor extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        onPause();
     }
 
     private void saveOnClick(View v) {
