@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mybasics.R;
-import com.mybasics.db.NoteDBHelper;
+import com.mybasics.db.DBHelper;
 import com.mybasics.models.Note;
 import com.mybasics.util.ItemClickHelper;
 import com.mybasics.util.NoteItemCallback;
@@ -35,7 +35,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private List<Note> notes;
     private List<Note> selectedNotes;
 
-    private NoteDBHelper db;
+    private DBHelper db;
 
     private ItemClickHelper itemClickHelper;
 
@@ -53,7 +53,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     public NoteAdapter(Context context) {
         this.context = context;
-        this.db = new NoteDBHelper(context);
+        this.db = new DBHelper(context);
         this.isOnActionMode = false;
 
         initializeData();
