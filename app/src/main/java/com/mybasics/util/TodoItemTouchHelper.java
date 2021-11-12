@@ -12,30 +12,24 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mybasics.R;
 import com.mybasics.adapters.TodoAdapter;
+import com.mybasics.fragments.TodosFragment;
 import com.mybasics.models.Todo;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class TodoItemTouchHelper extends ItemTouchHelper {
-
-    private Context context;
-
-    private static View container;
 
     public TodoItemTouchHelper(@NonNull Callback callback) {
         super(callback);
     }
 
-    public TodoItemTouchHelper(Context context, TodoAdapter adapter, View container) {
-        super(new TodoSimpleCallback(0, LEFT | RIGHT, adapter, context));
-        this.context = context;
-        this.container = container;
+    public TodoItemTouchHelper(Context context, TodoAdapter adapter, View root, Fragment fragmentContainer) {
+        super(new TodoSimpleCallback(0, LEFT | RIGHT, adapter, context, root, fragmentContainer));
     }
 
     public static class TodoSimpleCallback extends ItemTouchHelper.SimpleCallback {
@@ -44,11 +38,15 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
         private final int PADDING = 25;
         private boolean toggled = false;
         private Context context;
+        private View root;
+        private Fragment fragmentContainer;
 
-        public TodoSimpleCallback(int dragDirs, int swipeDirs, TodoAdapter adapter, Context context) {
+        public TodoSimpleCallback(int dragDirs, int swipeDirs, TodoAdapter adapter, Context context, View root, Fragment fragmentContainer) {
             super(dragDirs, swipeDirs);
             this.adapter = adapter;
             this.context = context;
+            this.root = root;
+            this.fragmentContainer = fragmentContainer;
         }
 
         @Override
@@ -62,18 +60,19 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
             switch(direction) {
                 case LEFT:
                     Todo deletedTodo = adapter.deleteTodo(position);
-                    AtomicBoolean undone = new AtomicBoolean(false);
-                    Snackbar.make(container, "To-do Item Deleted", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(root, "To-do Item Deleted", Snackbar.LENGTH_SHORT)
                             .setAction("Undo", v -> {
                                 adapter.insertTodo(deletedTodo, position);
-                                undone.set(true);
+                                ((TodosFragment) fragmentContainer).toggleEmptyList();
                             })
                             .addCallback(new Snackbar.Callback() {
                                 @Override
                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                     super.onDismissed(transientBottomBar, event);
-                                    if (!undone.get()) {
-                                        adapter.confirmDelete(deletedTodo);
+                                    switch (event) {
+                                        case DISMISS_EVENT_TIMEOUT:
+                                        case DISMISS_EVENT_CONSECUTIVE:
+                                            adapter.confirmDelete(deletedTodo);
                                     }
                                 }
                             })

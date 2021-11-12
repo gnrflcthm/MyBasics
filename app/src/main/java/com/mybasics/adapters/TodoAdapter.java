@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mybasics.R;
-import com.mybasics.db.TodoDBHelper;
+import com.mybasics.db.DBHelper;
 import com.mybasics.models.Todo;
 
 import java.time.format.DateTimeFormatter;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
 
-    private TodoDBHelper db;    // Database Object
+    private DBHelper db;    // Database Object
 
     private Context context;    // App Context
 
@@ -33,7 +33,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     public TodoAdapter(Context context) {
         this.context = context;
-        this.db = new TodoDBHelper(context);
+        this.db = new DBHelper(context);
 
         initializeData();
     }
@@ -77,8 +77,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     public void confirmDelete(Todo todo) {
         db.deleteTodo(todo);
-        todos = db.fetchTodos();
-        notifyDataSetChanged();
     }
 
     public void insertTodo(Todo todo, int position) {

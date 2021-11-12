@@ -74,7 +74,7 @@ public class TodosFragment extends IndexableFragment {
         toggleEmptyList();
     }
 
-    private void toggleEmptyList() {
+    public void toggleEmptyList() {
         if (adapter.getItemCount() == 0) {
             todoListView.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
@@ -92,7 +92,7 @@ public class TodosFragment extends IndexableFragment {
         todoListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         todoListView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-        ItemTouchHelper itemHelper = new TodoItemTouchHelper(context, adapter, container);
+        ItemTouchHelper itemHelper = new TodoItemTouchHelper(context, adapter, container, this);
         itemHelper.attachToRecyclerView(todoListView);
     }
 
