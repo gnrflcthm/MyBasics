@@ -35,6 +35,8 @@ public class NotesFragment extends IndexableFragment {
 
     private Context context;
 
+    private ItemClickHelper itemClickHelper;
+
     private ActivityResultLauncher<Intent> textEditorLauncher;
 
     private ActionMode actionMode;
@@ -80,26 +82,28 @@ public class NotesFragment extends IndexableFragment {
         }
     };
 
-    public NotesFragment(Context context, int index) {
-        super(index);
-        this.context = context;
-        textEditorLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onActivityResult);
-    }
-
-    public static NotesFragment newInstance(Context context, int index) {
-        NotesFragment fragment = new NotesFragment(context, index);
-        return fragment;
+    public static NotesFragment newInstance(int index) {
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        NotesFragment notesFragment = new NotesFragment();
+        notesFragment.setArguments(args);
+        return notesFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setIndex(getArguments().getInt("index"));
+
+        textEditorLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onActivityResult);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View noteFragment = inflater.inflate(R.layout.fragment_notes, container, false);
+
+        this.context = container.getContext();
 
         notesListView = noteFragment.findViewById(R.id.notesListView);
         addButton = noteFragment.findViewById(R.id.btnAddNote);
@@ -116,35 +120,36 @@ public class NotesFragment extends IndexableFragment {
         textEditorLauncher.launch(i);
     }
 
-    private ItemClickHelper itemClickHelper = new ItemClickHelper() {
-        @Override
-        public void onListItemClick(int position) {
-            if (actionMode == null) {
-                Note note = adapter.getNote(position);
-                Intent i = new Intent(context, NoteEditor.class);
-                i.putExtra("note_item", note);
-                i.putExtra("new", false);
-                textEditorLauncher.launch(i);
-            } else {
-                adapter.toggleSelected(position);
-                actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
-            }
-        }
-
-        @Override
-        public boolean onListItemLongClick(int position) {
-            if (actionMode != null) { return false; }
-
-            actionMode = getActivity().startActionMode(callback);
-            adapter.setIsOnActionMode(true);
-            adapter.toggleSelected(position);
-            actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
-            return true;
-        }
-    };
-
     private void initializeRecyclerView() {
         adapter = new NoteAdapter(context);
+
+        itemClickHelper = new ItemClickHelper() {
+            @Override
+            public void onListItemClick(int position) {
+                if (actionMode == null) {
+                    Note note = adapter.getNote(position);
+                    Intent i = new Intent(context, NoteEditor.class);
+                    i.putExtra("note_item", note);
+                    i.putExtra("new", false);
+                    textEditorLauncher.launch(i);
+                } else {
+                    adapter.toggleSelected(position);
+                    actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
+                }
+            }
+
+            @Override
+            public boolean onListItemLongClick(int position) {
+                if (actionMode != null) { return false; }
+
+                actionMode = getActivity().startActionMode(callback);
+                adapter.setIsOnActionMode(true);
+                adapter.toggleSelected(position);
+                actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
+                return true;
+            }
+        };
+
         adapter.setItemClickHelper(itemClickHelper);
 
         notesListView.setAdapter(adapter);
@@ -166,8 +171,6 @@ public class NotesFragment extends IndexableFragment {
                 } else {
                     adapter.updateNote(note);
                 }
-            } else {
-                return;
             }
         }
     }

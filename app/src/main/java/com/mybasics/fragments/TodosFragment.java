@@ -29,24 +29,27 @@ public class TodosFragment extends IndexableFragment {
 
     private TodoAdapter adapter;
 
-    public TodosFragment(Context context, int index) {
-        super(index);
-        this.context = context;
-    }
-
-    public static TodosFragment newInstance(Context context, int index) {
-        return new TodosFragment(context, index);
+    public static TodosFragment newInstance(int index) {
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        TodosFragment todosFragment = new TodosFragment();
+        todosFragment.setArguments(args);
+        return todosFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setIndex(getArguments().getInt("index"));
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View todoFragment = inflater.inflate(R.layout.fragment_todos, container, false);
+
+        this.context = container.getContext();
 
         todoListView = todoFragment.findViewById(R.id.todoListView);
         addButton = todoFragment.findViewById(R.id.btnAddTodo);
