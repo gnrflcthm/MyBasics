@@ -1,13 +1,15 @@
 package com.mybasics.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mybasics.R;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * App Bar
      */
-    private MaterialToolbar appBar;
+    private Toolbar appBar;
 
     /**
      * Root Layout (RelativeLayout in activity_main.xml)
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+
         exitOnNextBack = false;
         init();
     }
@@ -81,9 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
 
-        todos = TodosFragment.newInstance(this, 0);
-        notes = NotesFragment.newInstance(this, 1);
+        todos = TodosFragment.newInstance(0);
+        notes = NotesFragment.newInstance(1);
         reminders = RemindersFragment.newInstance(2);
+
+        appBar.setOnMenuItemClickListener(this::onMenuItemClick);
 
         // Initially sets the Todos Fragment as the initial screen
         currentFragment = todos;
@@ -127,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Replaces the the current displayed fragment with the current fragment and updates the
      * AppBar title/text.
-     *
-     * (babaguhin ko pa toh)**
      */
     private void navigate() {
         fragmentManager
@@ -219,5 +223,22 @@ public class MainActivity extends AppCompatActivity {
      */
     public void toggleBottomNavigation(int visibility) {
         bottomNav.setVisibility(visibility);
+    }
+
+    private boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.settings:
+                openSettings();
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Launches the settings activity.
+     */
+    private void openSettings() {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
     }
 }

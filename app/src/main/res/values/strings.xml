@@ -6,4 +6,13 @@
     <string name="add_todo">Add To-Do</string>
     <string name="add_note">Add Note</string>
     <string name="add_reminder">Add Reminder</string>
+    <string-array name="app_themes">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+    <string-array name="item_styles">
+        <item>Minimal</item>
+        <item>Detailed</item>
+    </string-array>
 </resources>

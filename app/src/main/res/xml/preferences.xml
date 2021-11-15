@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="General"
+        app:iconSpaceReserved="false">
+        <DropDownPreference
+            android:key="app_theme"
+            android:title="Theme"
+            app:iconSpaceReserved="false"
+            android:entries="@array/app_themes"
+            android:entryValues="@array/app_themes"
+            android:defaultValue="light"
+            />
+        <DropDownPreference
+            android:key="item_style"
+            android:title="Detailed Item Style"
+            android:entries="@array/item_styles"
+            android:entryValues="@array/item_styles"
+            android:defaultValue="Detailed"
+            app:iconSpaceReserved="false"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Extras"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:title="Developer's Activity"
+            app:iconSpaceReserved="false"
+            >
+            <intent android:action=".activities.SplashScreen"/>
+        </Preference>
+        <Preference
+            android:title="About"
+            app:iconSpaceReserved="false"
+            >
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>
