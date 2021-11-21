@@ -2,12 +2,12 @@ package com.mybasics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.mybasics.R;
 import com.mybasics.adapters.TodoAdapter;
-import com.mybasics.fragments.modals.AddTodoModal;
+import com.mybasics.fragments.modals.AddTodoDialog;
 import com.mybasics.util.TodoItemTouchHelper;
 
 public class TodosFragment extends IndexableFragment {
@@ -25,7 +25,7 @@ public class TodosFragment extends IndexableFragment {
     private ExtendedFloatingActionButton addButton;
     private RecyclerView todoListView;
     private TextView emptyText;
-    private AddTodoModal addTodoModal;
+    private AddTodoDialog addTodoDialog;
 
     private TodoAdapter adapter;
 
@@ -55,27 +55,18 @@ public class TodosFragment extends IndexableFragment {
         addButton = todoFragment.findViewById(R.id.btnAddTodo);
         emptyText = todoFragment.findViewById(R.id.emptyText);
 
-        addTodoModal = new AddTodoModal(this::addTodo);
-        addButton.setOnClickListener(this::showAddModal);
+        addTodoDialog = new AddTodoDialog(getActivity(), this::addTodo);
 
-        initializeRecyclerView(container);
+        addButton.setOnClickListener(this::showAddDialog);
 
-        toggleEmptyList();
+        new Handler(getActivity().getMainLooper()).post(() -> {
+            initializeRecyclerView(container);
+            toggleEmptyList();
+        });
 
         return todoFragment;
     }
 
-    private void showAddModal(View v) {
-        addTodoModal.show(getParentFragmentManager(), AddTodoModal.TAG);
-    }
-
-    private void addTodo(View v) {
-        String todoText = addTodoModal.getTodoText();
-        adapter.addTodo(todoText);
-        addTodoModal.clearText();
-        getParentFragmentManager().beginTransaction().remove(addTodoModal).commit();
-        toggleEmptyList();
-    }
 
     public void toggleEmptyList() {
         if (adapter.getItemCount() == 0) {
@@ -87,13 +78,23 @@ public class TodosFragment extends IndexableFragment {
         }
     }
 
+    private void showAddDialog(View v) {
+        addTodoDialog.show();
+    }
+
+    private void addTodo(View v) {
+        String content = addTodoDialog.getTextContent();
+        adapter.addTodo(content);
+        toggleEmptyList();
+        addTodoDialog.dismiss();
+    }
+
     private void initializeRecyclerView(View container) {
         adapter = new TodoAdapter(context);
         adapter.setDeletedItemListener(this::toggleEmptyList);
 
         todoListView.setAdapter(adapter);
         todoListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        todoListView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
         ItemTouchHelper itemHelper = new TodoItemTouchHelper(context, adapter, container, this);
         itemHelper.attachToRecyclerView(todoListView);
