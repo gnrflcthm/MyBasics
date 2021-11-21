@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mybasics.R;
 import com.mybasics.db.DBHelper;
 import com.mybasics.models.Todo;
+import com.mybasics.util.DeletedItemListener;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     public TodoAdapter(Context context) {
         this.context = context;
-        this.db = new DBHelper(context);
+
+        db = DBHelper.getInstance(context.getApplicationContext());
 
         initializeData();
     }
@@ -104,19 +106,17 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         this.deletedItemListener = deletedItemListener;
     }
 
-    public interface DeletedItemListener {
-        void onItemDelete();
-    }
-
     protected static class TodoViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView iconStatus;
         protected TextView textContent;
         protected TextView textStatus;
         protected TextView textDateAdded;
+        protected Context context;
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
+            context = view.getContext();
             iconStatus = view.findViewById(R.id.todoIconStatus);
             textContent = view.findViewById(R.id.todoTextContent);
             textStatus = view.findViewById(R.id.todoTextStatus);
@@ -127,12 +127,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
             textContent.setText(todo.getContent());
             textDateAdded.setText(todo.getDateAdded().format(DateTimeFormatter.ISO_LOCAL_DATE));
             if (todo.isCompleted()) {
-                iconStatus.setImageResource(R.drawable.ic_baseline_check_24);
                 iconStatus.setBackgroundResource(R.drawable.round_green_bg);
                 textStatus.setText("COMPLETED");
             } else {
-                iconStatus.setImageResource(R.drawable.ic_baseline_close_24);
-                iconStatus.setBackgroundResource(R.drawable.round_red_bg);
+                iconStatus.setBackgroundResource(R.drawable.round_grey_bg);
                 textStatus.setText("PENDING");
             }
         }

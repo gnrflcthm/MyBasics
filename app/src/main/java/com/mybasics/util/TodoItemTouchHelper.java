@@ -24,10 +24,6 @@ import com.mybasics.models.Todo;
 
 public class TodoItemTouchHelper extends ItemTouchHelper {
 
-    public TodoItemTouchHelper(@NonNull Callback callback) {
-        super(callback);
-    }
-
     public TodoItemTouchHelper(Context context, TodoAdapter adapter, View root, Fragment fragmentContainer) {
         super(new TodoSimpleCallback(0, LEFT | RIGHT, adapter, context, root, fragmentContainer));
     }
@@ -35,7 +31,7 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
     public static class TodoSimpleCallback extends ItemTouchHelper.SimpleCallback {
 
         private TodoAdapter adapter;
-        private final int PADDING = 25;
+        private final int PADDING = 35;
         private boolean toggled = false;
         private Context context;
         private View root;
@@ -119,13 +115,18 @@ public class TodoItemTouchHelper extends ItemTouchHelper {
             bg.setBounds(item.getLeft(), item.getTop(), item.getRight(), item.getBottom());
             bg.draw(canvas);
             Drawable icon = AppCompatResources.getDrawable(context, resId);
-            icon.setColorFilter(ContextCompat.getColor(context, R.color.black), PorterDuff.Mode.MULTIPLY);
+            int iconColor = (isCompleted) ? ContextCompat.getColor(context, R.color.white) : ContextCompat.getColor(context, R.color.black);
+            icon.setColorFilter(iconColor, PorterDuff.Mode.MULTIPLY);
             icon.setBounds(item.getLeft() + PADDING, item.getTop() + PADDING, item.getBottom() - item.getTop() - PADDING, item.getBottom() - PADDING);
             icon.draw(canvas);
             Paint textStyle = new Paint();
             textStyle.setTextAlign(Paint.Align.LEFT);
             textStyle.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, context.getResources().getDisplayMetrics()));
-            textStyle.setColor(0xFF333333);
+            if(isCompleted) {
+                textStyle.setColor(0xFFFFFFFF);
+            } else {
+                textStyle.setColor(0xFF000000);
+            }
             canvas.drawText("Toggle To-Do", icon.getBounds().right + PADDING, icon.getBounds().bottom - PADDING - 5, textStyle);
         }
 
