@@ -3,7 +3,6 @@ package com.mybasics.adapters;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mybasics.R;
 import com.mybasics.db.DBHelper;
 import com.mybasics.models.Note;
+import com.mybasics.util.DeletedItemListener;
 import com.mybasics.util.ItemClickHelper;
 import com.mybasics.util.NoteItemCallback;
 
@@ -26,20 +26,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Context context;
 
     private List<Note> notes;
-    private List<Note> selectedNotes;
 
     private DBHelper db;
 
     private ItemClickHelper itemClickHelper;
 
-    private boolean isOnActionMode;
+    private DeletedItemListener deletedItemListener;
 
     private Comparator<Note> sortedByDateLastModified = (n1, n2) -> {
         if (n1.getDateLastModified().compareTo(n2.getDateLastModified()) > 0) {
@@ -53,8 +51,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     public NoteAdapter(Context context) {
         this.context = context;
-        this.db = new DBHelper(context);
-        this.isOnActionMode = false;
+        this.db = DBHelper.getInstance(context.getApplicationContext());
 
         initializeData();
     }
@@ -88,14 +85,21 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         refreshData();
     }
 
-    public void deleteSelected() {
-        List<String> noteIds =
-                selectedNotes
-                .stream()
-                .map(note -> note.getId())
-                .collect(Collectors.toList());
-        db.deleteSelectedNotes(noteIds);
-        refreshData();
+    public Note deleteNote(int position) {
+        Note note = notes.remove(position);
+        notifyItemRemoved(position);
+        deletedItemListener.onItemDelete();
+        return note;
+    }
+
+    public void insertNote(Note note, int position) {
+        notes.add(position, note);
+        notifyItemInserted(position);
+        deletedItemListener.onItemDelete();
+    }
+
+    public void confirmDelete(Note note) {
+        db.deleteNote(note);
     }
 
     private void refreshData() {
@@ -104,45 +108,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         DiffUtil.DiffResult res = DiffUtil.calculateDiff(new NoteItemCallback(notes, newNotes));
         notes = newNotes;
         res.dispatchUpdatesTo(this);
-    }
-
-    public void toggleSelected(int position) {
-        Note note = notes.get(position);
-        note.toggleSelected();
-        notifyItemChanged(position);
-        if (note.isSelected()) {
-            selectedNotes.add(note);
-        } else {
-            selectedNotes.remove(note);
-        }
-    }
-
-    public int getSelectedCount() {
-        return selectedNotes.size();
-    }
-
-    public void setIsOnActionMode(boolean isOnActionMode) {
-        this.isOnActionMode = isOnActionMode;
-        if (isOnActionMode) {
-            selectedNotes = new ArrayList<>();
-        } else {
-            selectedNotes = null;
-        }
-    }
-
-    public void selectAll() {
-        notes.stream().forEach(n -> n.setSelected(true));
-        notifyDataSetChanged();
-        selectedNotes.clear();
-        selectedNotes.addAll(notes);
-    }
-
-    public void deselectAll() {
-        notes.stream().forEach(n -> n.setSelected(false));
-        notifyDataSetChanged();
-        if (selectedNotes != null) {
-            selectedNotes.clear();
-        }
     }
 
     public Note getNote(int position) {
@@ -158,13 +123,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         this.itemClickHelper = itemClickHelper;
     }
 
-    protected class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public void setDeletedItemListener(DeletedItemListener deletedItemListener) {
+        this.deletedItemListener = deletedItemListener;
+    }
+
+    protected class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView noteTitle;
         private TextView noteModified;
         private TextView notePreview;
-
-        private View selectedOverlay;
 
         private ItemClickHelper clickHelper;
 
@@ -173,10 +140,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             noteTitle = view.findViewById(R.id.noteTitle);
             noteModified = view.findViewById(R.id.noteModified);
             notePreview = view.findViewById(R.id.notePreview);
-            selectedOverlay = view.findViewById(R.id.selected_overlay);
 
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
         }
 
         public void setData(Note note) {
@@ -186,12 +151,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             noteModified.setText(note.getDateLastModified().format(format));
             Spanned noteContent = Html.fromHtml(note.getContent());
             notePreview.setText(noteContent);
-            selectedOverlay.setVisibility(View.GONE);
-            if (isOnActionMode) {
-                if(note.isSelected()) {
-                    selectedOverlay.setVisibility(View.VISIBLE);
-                }
-            }
         }
 
         public void setItemClickHelper(ItemClickHelper helper) {
@@ -203,10 +162,5 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             clickHelper.onListItemClick(getAdapterPosition());
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            Log.d("LONG_PRESSED: ", "" + getAdapterPosition());
-            return clickHelper.onListItemLongClick(getAdapterPosition());
-        }
     }
 }

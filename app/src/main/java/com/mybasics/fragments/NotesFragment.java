@@ -4,83 +4,37 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.mybasics.R;
-import com.mybasics.activities.MainActivity;
 import com.mybasics.activities.NoteEditor;
 import com.mybasics.adapters.NoteAdapter;
 import com.mybasics.models.Note;
-import com.mybasics.util.ItemClickHelper;
+import com.mybasics.util.NoteSimpleCallback;
 
 public class NotesFragment extends IndexableFragment {
 
     private RecyclerView notesListView;
     private NoteAdapter adapter;
     private ExtendedFloatingActionButton addButton;
+    private TextView emptyText;
 
     private Context context;
 
-    private ItemClickHelper itemClickHelper;
-
     private ActivityResultLauncher<Intent> textEditorLauncher;
-
-    private ActionMode actionMode;
-    private ActionMode.Callback callback = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.action_mode_menu, menu);
-            addButton.setVisibility(View.GONE);
-            ((MainActivity) getActivity()).toggleBottomNavigation(View.GONE);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) { return false; }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch(item.getItemId()) {
-                case R.id.delete:
-                    adapter.deleteSelected();
-                    actionMode.finish();
-                    break;
-                case R.id.selectAll:
-                    if (adapter.getSelectedCount() == adapter.getItemCount()) {
-                        adapter.deselectAll();
-                    } else {
-                        adapter.selectAll();
-                    }
-                    actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
-                    break;
-            }
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-            addButton.setVisibility(View.VISIBLE);
-            adapter.setIsOnActionMode(false);
-            adapter.deselectAll();
-            ((MainActivity) getActivity()).toggleBottomNavigation(View.VISIBLE);
-        }
-    };
 
     public static NotesFragment newInstance(int index) {
         Bundle args = new Bundle();
@@ -108,8 +62,13 @@ public class NotesFragment extends IndexableFragment {
         notesListView = noteFragment.findViewById(R.id.notesListView);
         addButton = noteFragment.findViewById(R.id.btnAddNote);
         addButton.setOnClickListener(this::openNewNote);
+        emptyText = noteFragment.findViewById(R.id.emptyText);
 
-        initializeRecyclerView();
+        new Handler(getActivity().getMainLooper()).post(() -> {
+            initializeRecyclerView(container);
+            toggleEmptyList();
+        });
+
 
         return noteFragment;
     }
@@ -120,39 +79,23 @@ public class NotesFragment extends IndexableFragment {
         textEditorLauncher.launch(i);
     }
 
-    private void initializeRecyclerView() {
+    private void initializeRecyclerView(View root) {
         adapter = new NoteAdapter(context);
 
-        itemClickHelper = new ItemClickHelper() {
-            @Override
-            public void onListItemClick(int position) {
-                if (actionMode == null) {
-                    Note note = adapter.getNote(position);
-                    Intent i = new Intent(context, NoteEditor.class);
-                    i.putExtra("note_item", note);
-                    i.putExtra("new", false);
-                    textEditorLauncher.launch(i);
-                } else {
-                    adapter.toggleSelected(position);
-                    actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
-                }
-            }
+        adapter.setItemClickHelper(position -> {
+            Note note = adapter.getNote(position);
+            Intent i = new Intent(context, NoteEditor.class);
+            i.putExtra("note_item", note);
+            i.putExtra("new", false);
+            textEditorLauncher.launch(i);
+        });
 
-            @Override
-            public boolean onListItemLongClick(int position) {
-                if (actionMode != null) { return false; }
+        adapter.setDeletedItemListener(this::toggleEmptyList);
 
-                actionMode = getActivity().startActionMode(callback);
-                adapter.setIsOnActionMode(true);
-                adapter.toggleSelected(position);
-                actionMode.setTitle(String.format("%s Selected", adapter.getSelectedCount()));
-                return true;
-            }
-        };
-
-        adapter.setItemClickHelper(itemClickHelper);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new NoteSimpleCallback(adapter, context, root, this));
 
         notesListView.setAdapter(adapter);
+        touchHelper.attachToRecyclerView(notesListView);
         notesListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     }
 
@@ -168,10 +111,21 @@ public class NotesFragment extends IndexableFragment {
                 Note note = (Note) i.getSerializableExtra("NOTE");
                 if (isNewlyCreated) {
                     adapter.addNote(note);
+                    toggleEmptyList();
                 } else {
                     adapter.updateNote(note);
                 }
             }
+        }
+    }
+
+    public void toggleEmptyList() {
+        if (adapter.getItemCount() == 0) {
+            notesListView.setVisibility(View.INVISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            notesListView.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.INVISIBLE);
         }
     }
 }
