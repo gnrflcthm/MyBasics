@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.mybasics.models.Note;
+import com.mybasics.models.Reminder;
 import com.mybasics.models.Todo;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,9 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "MyBasics.db";    // Database File Name
+    public static DBHelper dbInstance;
+
+    public static final String DB_NAME = "MyBasics.db";    // Database File Name
     private static final int DB_VERSION = 1;                // Database Version
 
     private final String TABLE_TODOS = "todos";              // Todos Table Name
@@ -32,13 +35,18 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String DATE_CREATED_NOTES = "date_created";
     private final String DATE_LAST_MODIFIED_NOTES = "date_last_modified";
 
+    private final String TABLE_REMINDERS = "reminders";
+    private final String ID_REMINDERS = "id";
+    private final String TITLE_REMINDERS = "title";
+    private final String DATE_SCHEDULED_REMINDERS = "date_scheduled";
+
     private final String CREATE_TABLE_TODOS = String.format(
             "CREATE TABLE %s (" +
                     "%s TEXT PRIMARY_KEY," +
                     "%s TEXT NOT NULL," +
                     "%s INTEGER NOT NULL DEFAULT 0," +
                     "%s TEXT NOT NULL" +
-                    ")",
+                    ");",
             TABLE_TODOS, ID_TODOS,
             CONTENT_TODOS, STATUS_TODOS, DATE_ADDED_TODOS);
 
@@ -49,30 +57,45 @@ public class DBHelper extends SQLiteOpenHelper {
                     "%s TEXT NOT NULL," +
                     "%s TEXT NOT NULL," +
                     "%s TEXT NOT NULL" +
-                    ")",
+                    ");",
             TABLE_NOTES, ID_NOTES, TITLE_NOTES, CONTENT_NOTES,
             DATE_CREATED_NOTES, DATE_LAST_MODIFIED_NOTES
     );
 
+    private final String CREATE_TABLE_REMINDERS = String.format(
+            "CREATE TABLE %s (" +
+                    "%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "%s TEXT NOT NULL," +
+                    "%s TEXT NOT NULL" +
+                    ");",
+            TABLE_REMINDERS, ID_REMINDERS,
+            TITLE_REMINDERS, DATE_SCHEDULED_REMINDERS
+    );
+
     private final String DROP_TABLE_TODOS = String.format("DROP TABLE IF EXISTS %s", TABLE_TODOS);
     private final String DROP_TABLE_NOTES = String.format("DROP TABLE IF EXISTS %s", TABLE_NOTES);
+    private final String DROP_TABLE_REMINDERS = String.format("DROP TABLE IF EXISTS %s", TABLE_REMINDERS);
 
     private SQLiteDatabase db;                              // Database Object
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        Log.d("DATABASE", "Initialized");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_TODOS);
         db.execSQL(CREATE_TABLE_NOTES);
+        db.execSQL(CREATE_TABLE_REMINDERS);
+        Log.d("TABLES CREATED", "True");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_TABLE_TODOS);
         db.execSQL(DROP_TABLE_NOTES);
+        db.execSQL(DROP_TABLE_REMINDERS);
         onCreate(db);
     }
 
@@ -95,6 +118,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+        Log.d("Fetch To-Dos", "Done");
         return todos;
     }
 
@@ -142,8 +166,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return status != 0;
     }
 
+    /**
+     * Fetches all notes and returns them as a list.
+     * May return an empty list if there are no records.
+     * @return List of Notes
+     */
     public List<Note> fetchNotes() {
-        db = getWritableDatabase();
+        db = getReadableDatabase();
         List<Note> notes = new ArrayList<>();
         String sql = String.format("SELECT * FROM %s", TABLE_NOTES);
         Cursor cursor = db.rawQuery(sql, null);
@@ -157,10 +186,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+        Log.d("Fetch Notes", "Done");
         return notes;
     }
 
-
+    /**
+     * Adds a note to the database
+     * @param note note to be added
+     * @return boolean indicating if note insertion was successful
+     */
     public boolean addNote(Note note) {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -174,6 +208,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return status != -1;
     }
 
+    /**
+     * Updates a note from the databse
+     * @param note note to be updated
+     * @return boolean indicating if the update was successful
+     */
     public boolean updateNote(Note note) {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -185,16 +224,57 @@ public class DBHelper extends SQLiteOpenHelper {
         return res != 0;
     }
 
-    public boolean deleteSelectedNotes(List<String> ids) {
+    /**
+     * Deletes the specified note.
+     * @param note note to be deleted
+     * @return boolean indicating if deletion was successful.
+     */
+    public boolean deleteNote(Note note) {
         db = getWritableDatabase();
-        StringBuilder selection = new StringBuilder();
-        for (String id : ids) {
-            selection.append(String.format("\"%s\" ", id));
-        }
-        String finalSelection = selection.toString().trim().replaceAll(" ", ", ");
-        Log.d("SELECTED IDS: ", finalSelection);
-        int status = db.delete(TABLE_NOTES, String.format("%s IN (%s)", ID_NOTES, finalSelection), null);
+        int status = db.delete(TABLE_NOTES, "id = ?", new String[] { note.getId() });
         db.close();
         return status != 0;
+    }
+
+    public List<Reminder> fetchReminders() {
+        db = getReadableDatabase();
+        List<Reminder> reminders = new ArrayList<>();
+        String sql = String.format("SELECT * FROM %s", TABLE_REMINDERS);
+        Cursor cursor = db.rawQuery(sql, null);
+        while(cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String title = cursor.getString(1);
+            LocalDateTime schedule = LocalDateTime.parse(cursor.getString(2));
+            reminders.add(Reminder.newInstance(id, title, schedule));
+        }
+        cursor.close();
+        db.close();
+        Log.d("Fetch Reminders", "Done");
+        return reminders;
+    }
+
+    public long addReminder(Reminder reminder) {
+        db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(TITLE_REMINDERS, reminder.getTitle());
+        cv.put(DATE_SCHEDULED_REMINDERS, reminder.getSchedule().toString());
+        return db.insert(TABLE_REMINDERS, null, cv);
+    }
+
+    public boolean deleteReminder(Reminder reminder) {
+        db = getWritableDatabase();
+        int status = db.delete(TABLE_REMINDERS, String.format("id = %s", reminder.getId()), null);
+        return status != 0;
+    }
+
+    public static DBHelper getInstance(Context context) {
+        if (dbInstance == null) {
+            dbInstance = new DBHelper(context);
+        }
+        return dbInstance;
+    }
+
+    public static void closeInstance() {
+        dbInstance = null;
     }
 }
