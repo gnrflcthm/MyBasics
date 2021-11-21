@@ -6,6 +6,10 @@
     <string name="add_todo">Add To-Do</string>
     <string name="add_note">Add Note</string>
     <string name="add_reminder">Add Reminder</string>
+    <string name="empty_todos">It\'s Quiet in Here</string>
+    <string name="empty_notes">Nothing Worth Note Taking</string>
+    <string name="empty_reminders">Nothing To Look Forward To</string>
+    <string name="logo_description">MyBasics Logo</string>
     <string-array name="app_themes">
         <item>Light</item>
         <item>Dark</item>
