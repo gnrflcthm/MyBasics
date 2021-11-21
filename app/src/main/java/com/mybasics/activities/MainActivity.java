@@ -6,9 +6,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -62,10 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadThemes();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
 
         exitOnNextBack = false;
         init();
@@ -167,9 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
                 exitOnNextBack = true;
-                // Chinecheck pa kung mas maganda ba ang Snackbar or Toast
                 Snackbar.make(rootView, "Press Back Again to Exit Application", Snackbar.LENGTH_SHORT).show();
-//                Toast.makeText(this, "Press Back Again to Exit Application", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -226,10 +225,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.settings:
-                openSettings();
-                break;
+        if (menuItem.getItemId() == R.id.settings) {
+            openSettings();
         }
         return true;
     }
@@ -241,4 +238,26 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNav.setSelectedItemId(getCurrentSelected());
+    }
+
+    private void loadThemes() {
+        String theme = PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme", "Light");
+        switch (theme) {
+            case "Light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "Dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "System Default":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+    }
+
 }
