@@ -3,8 +3,10 @@ package com.mybasics.fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.mybasics.R;
 
@@ -22,7 +24,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             switch(key) {
                 case APP_THEME:
                     Preference appTheme = findPreference(key);
-                    appTheme.setSummary("Current: " + sharedPreferences.getString(key, "light"));
+                    appTheme.setSummary("Current: " + sharedPreferences.getString(key, "Light"));
+                    loadThemes();
                     break;
                 case ITEM_STYLE:
                     Preference itemStyle = findPreference(key);
@@ -48,5 +51,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         Preference itemStyle = findPreference(ITEM_STYLE);
         itemStyle.setSummary(sharedPreferences.getString(ITEM_STYLE, "Detailed"));
+    }
+
+    private void loadThemes() {
+        String theme = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString("app_theme", "Light");
+        switch (theme) {
+            case "Light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "Dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "System Default":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
     }
 }

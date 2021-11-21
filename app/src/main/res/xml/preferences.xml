@@ -11,7 +11,7 @@
             app:iconSpaceReserved="false"
             android:entries="@array/app_themes"
             android:entryValues="@array/app_themes"
-            android:defaultValue="light"
+            android:defaultValue="Light"
             />
         <DropDownPreference
             android:key="item_style"
@@ -29,7 +29,7 @@
             android:title="Developer's Activity"
             app:iconSpaceReserved="false"
             >
-            <intent android:action=".activities.SplashScreen"/>
+            <intent android:action=".activities.DevelopersActivity"/>
         </Preference>
         <Preference
             android:title="About"
