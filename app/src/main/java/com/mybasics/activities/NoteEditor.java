@@ -72,6 +72,8 @@ public class NoteEditor extends AppCompatActivity {
 
         textEditor.setHtml(note.getContent());
 
+        textEditor.setEditorFontFamily("sans-serif");
+
         initialTitle = titleEdit.getText().toString();
         initialTextValue = textEditor.getCachedHtml();
     }
@@ -87,13 +89,9 @@ public class NoteEditor extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        verifyResults();
+        super.onBackPressed();
     }
 
     private void saveOnClick(View v) {
@@ -118,7 +116,7 @@ public class NoteEditor extends AppCompatActivity {
     private boolean saveNote() {
         try {
             String noteTitle = titleEdit.getText().toString();
-            note.setTitle(noteTitle.equals("") ? "Untitled Note" : noteTitle);
+            note.setTitle(noteTitle.trim().equals("") ? "Untitled Note" : noteTitle);
             note.setContent(textEditor.getCachedHtml());
             note.setDateLastModified(LocalDateTime.now());
             return true;
