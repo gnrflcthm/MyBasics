@@ -10,4 +10,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red_accent_400">#FFFF1744</color>
     <color name="green_accent_400">#FF00E676</color>
+    <color name="grey_300">#FFE0E0E0</color>
+
+    <color name="desert_sand">#EBC0AB </color>
+    <color name="champagne">#F3DECE </color>
+    <color name="newyork_pink">#CE796B</color>
+    <color name="black_coral">#4C5C6B</color>
+    <color name="black_coral_light">#798998</color>
+    <color name="obscura">#2D3E50</color>
 </resources>
