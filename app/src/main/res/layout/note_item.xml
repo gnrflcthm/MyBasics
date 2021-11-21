@@ -1,110 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:layout_height="95dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="?attr/colorSecondary"
+    android:maxHeight="95dp"
+    app:elevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/noteContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:minHeight="145dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:tint="@color/teal_200"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_height="match_parent"
+        android:padding="8dp">
         <TextView
             android:id="@+id/noteTitle"
-            android:layout_width="223dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:autoSizeTextType="none"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Note Title"
-            android:textAllCaps="true"
-            android:textColor="#FF000000"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/noteModified"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01/10/10"
-            android:textAlignment="textEnd"
-            android:layout_marginRight="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/notePreview"
-            app:layout_constraintEnd_toEndOf="@+id/notePreview"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/noteTitle"
-            app:layout_constraintTop_toTopOf="@+id/noteTitle" />
-
+            android:text="Title"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
         <TextView
             android:id="@+id/notePreview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/rounded_corners"
-            android:backgroundTint="#FFCCCCCC"
-            android:text="Lorem ipsum keme keme keme 48 years shonget kasi jowabella mahogany sa bella kemerloo tetetet kasi Mike na ang ano Gino sangkatuts shonga ma-kyonget at ang kasi sangkatuts balaj doonek ng intonses at bakit at bakit pinkalou shonget ng intonses at ang quality control majonders fayatollah kumenis kasi ng jowabelles tungril urky pamin bigalou na ang sa guash mahogany shonget pranella nang pinkalou wasok fayatollah kumenis ang shontis cheapangga mabaho boyband ng ang at ang tetetet balaj at nang chipipay thunder nang at effem tamalis thunder ng jowa at neuro lulu at nang sa paminta planggana bonggakea planggana kemerloo oblation na kirara na ang Gino ano at bakit valaj chaka borta ang na at mahogany jowabelles urky paminta ano na ang at bakit."
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noteTitle"
-            tools:layout_editor_absoluteX="12dp"
-            android:autoSizeTextType="none"
-            android:maxLines="5"
-            android:textSize="12sp"
+            android:text="Sorry ha ganito lang ako ha palibhasa iniwan, ghinost, pinaasa, di pinaglaban pinagpalit sa malapit,  di crinushback, rebound, pampalipas oras,pang drs lastly marupok.sorry, sorry sabi ko na. Sorry sa istorbo haha.. Ayaw talaga sakin ng mundo, life is so unfair. Sana hindi nalang ako nagtanong haha. Sensya na ah eto lang kasi ako. Walang kwenta sana di nalang ako pinanganak haha, im just simple person kasi, lowkey. I am just nobody walang magkakagusto sa walang kwentang tao katulad ko haha. sana di nalang ako nabuhay
+sige ako na last chat‚ ako naman lagi. Sensya na ha ganito lang kase ako ehh, walang kwenta, sana hinde nalang ako pinanganak haha, sorry hindi mo ako pwde ipagmalaki kasi ampanget ko haha, im just nobody, walang nagkakagsto sa walang kwentang taong katulad ko haha, sorry pwede nyu na ako eblock oky lang naman sa akin, sana hinde nlang ako nabuhay haha. ouch, pain, pighati, lumbay, hinagpis, kirot, hapdi, sakit, pagtangis, iyak, lungkot, siphayo, dalamhati, puot, daing, luha, hina, sawi.sige ako na last chat‚ ako naman lagi. Sensya na ha ganito lang kase ako ehh, walang kwenta, sana hinde nalang ako pinanganak haha, sorry hindi mo ako pwde ipagmalaki kasi ampanget ko haha, im just nobody, walang nagkakagsto sa walang kwentang taong katulad ko haha, sorry pwede nyu na ako eblock oky lang naman sa akin, sana hinde nlang ako nabuhay haha. ouch, pain, pighati, lumbay, hinagpis, kirot, hapdi, sakit, pagtangis, iyak, lungkot, siphayo, dalamhati, puot, daing, luha, hina, sawi.sige ako na last chat‚ ako naman lagi. Sensya na ha ganito lang kase ako ehh, walang kwenta, sana hinde nalang ako pinanganak haha, sorry hindi mo ako pwde ipagmalaki kasi ampanget ko haha, im just nobody, walang nagkakagsto sa walang kwentang taong katulad ko haha, sorry pwede nyu na ako eblock oky lang naman sa akin, sana hinde nlang ako nabuhay haha. ouch, pain, pighati, lumbay, hinagpis, kirot, hapdi, sakit, pagtangis, iyak, lungkot,"
+            android:maxLines="4"
             android:ellipsize="end"
-            android:paddingHorizontal="15dp"
-            android:layout_marginTop="5dp"
-            android:paddingVertical="5dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/selected_overlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:foreground="@color/teal_200_translucent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/noteContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        android:background="?android:attr/selectableItemBackground"
-        >
-
-        <ImageView
+            android:layout_marginTop="4dp"
+            android:paddingHorizontal="4dp"
+            android:justificationMode="inter_word"
+            app:justificationMode="inter_word"
+            app:layout_constraintTop_toBottomOf="@id/noteTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <TextView
+            android:id="@+id/noteModified"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_check_24"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="0/0/0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="center"
-            android:scaleX="3"
-            android:scaleY="3"
-            app:tint="@color/purple_500"
-            android:background="@drawable/round_red_bg"
-            android:backgroundTint="@color/purple_200"
+            app:layout_constraintTop_toTopOf="@id/noteTitle"
             />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
