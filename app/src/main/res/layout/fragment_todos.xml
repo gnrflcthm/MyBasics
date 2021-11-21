@@ -5,7 +5,7 @@
     android:id="@+id/todos_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFEEEEEE"
+    android:background="?attr/colorPrimaryVariant"
     tools:context="com.mybasics.fragments.TodosFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -24,9 +24,9 @@
         android:id="@+id/emptyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="It's Quiet in Here"
+        android:text="@string/empty_todos"
         android:textColor="#FFAAAAAA"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -5,7 +5,7 @@
     android:id="@+id/notes_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFEEEEEE"
+    android:background="?attr/colorPrimaryVariant"
     tools:context="com.mybasics.fragments.NotesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -19,5 +19,16 @@
         android:text="@string/add_note"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_notes"
+        android:textColor="#FFAAAAAA"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
