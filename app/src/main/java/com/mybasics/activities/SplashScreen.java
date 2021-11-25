@@ -18,6 +18,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        // Sets the default preferences when app is newly installed
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         Handler handler = new Handler(getMainLooper());
@@ -28,6 +29,9 @@ public class SplashScreen extends AppCompatActivity {
         }, 1000);
     }
 
+    /**
+     * Loads Themes based on shared preferences.
+     */
     private void loadThemes() {
         String theme = PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme", "Light");
         switch (theme) {

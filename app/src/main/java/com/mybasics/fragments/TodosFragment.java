@@ -29,6 +29,11 @@ public class TodosFragment extends IndexableFragment {
 
     private TodoAdapter adapter;
 
+    /**
+     * Creates a new instance of to-do fragment.
+     * @param index index of the fragment
+     * @return TodosFragment instance
+     */
     public static TodosFragment newInstance(int index) {
         Bundle args = new Bundle();
         args.putInt("index", index);
@@ -67,7 +72,9 @@ public class TodosFragment extends IndexableFragment {
         return todoFragment;
     }
 
-
+    /**
+     * Toggles an empty text if the adapter has no data.
+     */
     public void toggleEmptyList() {
         if (adapter.getItemCount() == 0) {
             todoListView.setVisibility(View.INVISIBLE);
@@ -78,10 +85,18 @@ public class TodosFragment extends IndexableFragment {
         }
     }
 
+    /**
+     * Shows the add dialog.
+     * @param v View associated with the event.
+     */
     private void showAddDialog(View v) {
         addTodoDialog.show();
     }
 
+    /**
+     * Adds to-do and dismisses the add to-do dialog.
+     * @param v
+     */
     private void addTodo(View v) {
         String content = addTodoDialog.getTextContent();
         adapter.addTodo(content);
@@ -89,6 +104,10 @@ public class TodosFragment extends IndexableFragment {
         addTodoDialog.dismiss();
     }
 
+    /**
+     * Initializes RecyclerView
+     * @param container
+     */
     private void initializeRecyclerView(View container) {
         adapter = new TodoAdapter(context);
         adapter.setDeletedItemListener(this::toggleEmptyList);

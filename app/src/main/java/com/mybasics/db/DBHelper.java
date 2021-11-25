@@ -19,14 +19,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static DBHelper dbInstance;
 
-    public static final String DB_NAME = "MyBasics.db";    // Database File Name
-    private static final int DB_VERSION = 1;                // Database Version
+    public static final String DB_NAME = "MyBasics.db";
+    private static final int DB_VERSION = 1;
 
-    private final String TABLE_TODOS = "todos";              // Todos Table Name
-    private final String ID_TODOS = "id";                         // ID Column Name
-    private final String CONTENT_TODOS = "content";               // Content Column Name
-    private final String STATUS_TODOS = "status";                 // Status Column Name
-    private final String DATE_ADDED_TODOS = "date_added";         // Date Added Column Name
+    private final String TABLE_TODOS = "todos";
+    private final String ID_TODOS = "id";
+    private final String CONTENT_TODOS = "content";
+    private final String STATUS_TODOS = "status";
+    private final String DATE_ADDED_TODOS = "date_added";
 
     private final String TABLE_NOTES = "notes";
     private final String ID_NOTES = "id";
@@ -76,7 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String DROP_TABLE_NOTES = String.format("DROP TABLE IF EXISTS %s", TABLE_NOTES);
     private final String DROP_TABLE_REMINDERS = String.format("DROP TABLE IF EXISTS %s", TABLE_REMINDERS);
 
-    private SQLiteDatabase db;                              // Database Object
+    private SQLiteDatabase db; // Database Object
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -236,6 +236,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return status != 0;
     }
 
+    /**
+     * Fetches all Reminders and returns them as a List.
+     * @return List of reminders.
+     */
     public List<Reminder> fetchReminders() {
         db = getReadableDatabase();
         List<Reminder> reminders = new ArrayList<>();
@@ -253,6 +257,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return reminders;
     }
 
+    /**
+     * Adds a reminder to the database.
+     * @param reminder Reminder to be added.
+     * @return id of newly inserted reminder if successful.
+     */
     public long addReminder(Reminder reminder) {
         db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -261,12 +270,23 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_REMINDERS, null, cv);
     }
 
+    /**
+     * Deletes a reminder from the databse.
+     * @param reminder Reminder to be deleted.
+     * @return boolean indicating if deletion was successful.
+     */
     public boolean deleteReminder(Reminder reminder) {
         db = getWritableDatabase();
         int status = db.delete(TABLE_REMINDERS, String.format("id = %s", reminder.getId()), null);
         return status != 0;
     }
 
+    /**
+     * Return an instance of the database.
+     * Used to prevent multiple instances.
+     * @param context Context to be used for database instantiation
+     * @return DBHelper instance
+     */
     public static DBHelper getInstance(Context context) {
         if (dbInstance == null) {
             dbInstance = new DBHelper(context);
@@ -274,6 +294,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return dbInstance;
     }
 
+    /**
+     * Closes the current instance if one exists.
+     */
     public static void closeInstance() {
         dbInstance = null;
     }

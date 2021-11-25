@@ -67,7 +67,6 @@ public class ReminderSimpleCallback extends ItemTouchHelper.SimpleCallback {
                             }
                         })
                         .show();
-
         }
     }
 

@@ -21,46 +21,23 @@ import com.mybasics.fragments.RemindersFragment;
 import com.mybasics.fragments.TodosFragment;
 
 public class MainActivity extends AppCompatActivity {
-    /**
-     * App Bar
-     */
-    private Toolbar appBar;
 
-    /**
-     * Root Layout (RelativeLayout in activity_main.xml)
-     */
-    private View rootView;
+    private Toolbar appBar;     // Toolbar
+    private View rootView;      // Root Layout
 
-    /**
-     * Bottom Navigation and Fragment Container
-     */
-    private BottomNavigationView bottomNav;
-    private FragmentContainerView fragmentContainer;
+    private BottomNavigationView bottomNav;             // Bottom Nav Bar
+    private FragmentContainerView fragmentContainer;    // View which holds all fragments
 
-    /**
-     * Used For handling fragment transactions
-     */
-    private FragmentManager fragmentManager;
+    private FragmentManager fragmentManager;    // For Managing Fragments
 
-    /**
-     * Boolean to ensure the app closes after pressing the back button twice
-     */
     private boolean exitOnNextBack;
 
+    private TodosFragment todos;            // Todos Fragment
+    private NotesFragment notes;            // Notes Fragment
+    private RemindersFragment reminders;    // Reminders Fragment
 
-    /**
-     * Fragments representing the 3 different application components (Todos, Notes, Reminders)
-     */
-    private TodosFragment todos;
-    private NotesFragment notes;
-    private RemindersFragment reminders;
-
-    /**
-     * Keeps track of the current and previous fragments.
-     * Mainly used for navigation purposes.
-     */
-    private IndexableFragment currentFragment = null;
-    private IndexableFragment previousFragment = null;
+    private IndexableFragment currentFragment = null;       // Current Fragment
+    private IndexableFragment previousFragment = null;      // Previous Fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,12 +216,18 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    /**
+     * Sets the selected index to the current view on resume.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         bottomNav.setSelectedItemId(getCurrentSelected());
     }
 
+    /**
+     * Loads the theme according to shared preferences.
+     */
     private void loadThemes() {
         String theme = PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme", "Light");
         switch (theme) {

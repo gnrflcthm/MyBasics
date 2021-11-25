@@ -79,16 +79,32 @@ public class AddReminderDialog extends Dialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
+    /**
+     * Sets the onReminderSave to be used
+     * @param onReminderSave instance of OnReminderSaved interface
+     */
     public void setOnReminderSave(OnReminderSave onReminderSave) {
         this.onReminderSave = onReminderSave;
     }
 
+    /**
+     * Shows the date picker
+     * @param v view associated with the click event.
+     */
     private void showDatePicker(View v) {
         DatePickerDialog datePicker = new DatePickerDialog(context, this::onDatePicked, current.getYear(), current.getMonth().ordinal(), current.getDayOfMonth());
         datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePicker.show();
     }
 
+    /**
+     * Called after he user finished picking a date.
+     * Launches the TimePicker
+     * @param v view associated with the event
+     * @param y year
+     * @param m month
+     * @param d day
+     */
     private void onDatePicked(View v, int y, int m, int d) {
         year = y;
         month =  m;
@@ -96,6 +112,12 @@ public class AddReminderDialog extends Dialog {
         new TimePickerDialog(context, this::onTimePicked, current.getHour(), current.getMinute(), false).show();
     }
 
+    /**
+     * Called when the user finished selecting a time.
+     * @param v view associated with the event
+     * @param h hour
+     * @param m minute
+     */
     private void onTimePicked(View v, int h, int m) {
         hour = h;
         minute = m;
@@ -112,11 +134,17 @@ public class AddReminderDialog extends Dialog {
         setDateTime.setText(dateTimeSelection.format(DateTimeFormatter.ofPattern("MM/dd/yy h:mm a")));
     }
 
+    /**
+     * Clears the contents and sets them to the default.
+     */
     private void clear() {
         titleText.setText("");
         setDateTime.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy h:mm a")));
     }
 
+    /**
+     * Interface to be used when saving a reminder.
+     */
     public interface OnReminderSave {
         void saveReminder(Reminder reminder, boolean isInvalidTitle, boolean isInvalidDate);
     }

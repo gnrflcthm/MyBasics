@@ -39,6 +39,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     private DeletedItemListener deletedItemListener;
 
+    // Comparator for sorting notes according to its date last modified.
     private Comparator<Note> sortedByDateLastModified = (n1, n2) -> {
         if (n1.getDateLastModified().compareTo(n2.getDateLastModified()) > 0) {
             return -1;
@@ -52,10 +53,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public NoteAdapter(Context context) {
         this.context = context;
         this.db = DBHelper.getInstance(context.getApplicationContext());
-
         initializeData();
     }
 
+    // Initialized Adapted Data
     private void initializeData() {
         notes = new ArrayList<>();
         notes = db.fetchNotes();
@@ -75,16 +76,30 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.setItemClickHelper(itemClickHelper);
     }
 
+    /**
+     * Adds Note to database and refreshes data.
+     * @param note Note to be added
+     */
     public void addNote(Note note) {
         db.addNote(note);
         refreshData();
     }
 
+    /**
+     * Updates Note and refreshes data.
+     * @param note Note to be updated
+     */
     public void updateNote(Note note) {
         db.updateNote(note);
         refreshData();
     }
 
+    /**
+     * Deletes Note temporarily.
+     * This ensures user can undo the action within the time frame.
+     * @param position index of note to be deleted
+     * @return deleted Note item.
+     */
     public Note deleteNote(int position) {
         Note note = notes.remove(position);
         notifyItemRemoved(position);
@@ -92,16 +107,29 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return note;
     }
 
+    /**
+     * Inserts note at the specified position.
+     * Used after deleteNote() for undoing deletes.
+     * @param note to be inserted
+     * @param position index for insertion
+     */
     public void insertNote(Note note, int position) {
         notes.add(position, note);
         notifyItemInserted(position);
         deletedItemListener.onItemDelete();
     }
 
+    /**
+     * Deletes Note from the database.
+     * @param note Note to be deleted
+     */
     public void confirmDelete(Note note) {
         db.deleteNote(note);
     }
 
+    /**
+     * Refreshes Data by comparing its differences using DiffUtil
+     */
     private void refreshData() {
         List<Note> newNotes = db.fetchNotes();
         Collections.sort(newNotes, sortedByDateLastModified);
@@ -110,6 +138,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         res.dispatchUpdatesTo(this);
     }
 
+    /**
+     * Gets Note at the specified position.
+     * @param position index of the note.
+     * @return Note at the specified position
+     */
     public Note getNote(int position) {
         return notes.get(position);
     }
@@ -119,10 +152,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return notes.size();
     }
 
+    /**
+     * Sets ItemClickHelper to be used by the notes
+     * @param itemClickHelper implementation of ItemClickHelper interface
+     */
     public void setItemClickHelper(ItemClickHelper itemClickHelper) {
         this.itemClickHelper = itemClickHelper;
     }
-
+    /**
+     * Sets DeletedItemListener
+     * @param deletedItemListener implementation of DeletedItemListener interface
+     */
     public void setDeletedItemListener(DeletedItemListener deletedItemListener) {
         this.deletedItemListener = deletedItemListener;
     }
@@ -140,10 +180,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             noteTitle = view.findViewById(R.id.noteTitle);
             noteModified = view.findViewById(R.id.noteModified);
             notePreview = view.findViewById(R.id.notePreview);
-
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Sets Data for the Note Item View
+         * @param note Note object containing data to be used
+         */
         public void setData(Note note) {
             noteTitle.setText(note.getTitle());
             boolean modifiedToday = LocalDate.now().equals(note.getDateLastModified().toLocalDate());
@@ -153,6 +196,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             notePreview.setText(noteContent);
         }
 
+        /**
+         * Sets ItemClickHelper for the note
+         * @param helper
+         */
         public void setItemClickHelper(ItemClickHelper helper) {
             clickHelper = helper;
         }

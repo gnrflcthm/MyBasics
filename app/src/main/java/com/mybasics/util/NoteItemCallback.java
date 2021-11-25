@@ -6,6 +6,9 @@ import com.mybasics.models.Note;
 
 import java.util.List;
 
+/**
+ * Used for quick list comparison.
+ */
 public class NoteItemCallback extends DiffUtil.Callback {
     private List<Note> oldList;
     private List<Note> newList;

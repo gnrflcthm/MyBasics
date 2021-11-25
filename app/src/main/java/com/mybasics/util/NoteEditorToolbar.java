@@ -17,11 +17,13 @@ import net.dankito.richtexteditor.android.command.UnderlineCommand;
 import net.dankito.richtexteditor.android.command.UndoCommand;
 import net.dankito.richtexteditor.android.toolbar.EditorToolbar;
 
+/**
+ * Custom implementation of NoteEditorToolbar.
+ */
 public class NoteEditorToolbar extends EditorToolbar {
 
     public NoteEditorToolbar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
         initToolbars(context);
     }
 

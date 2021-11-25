@@ -19,7 +19,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
-
         preferenceChangeListener = ((sharedPreferences, key) -> {
             switch(key) {
                 case APP_THEME:
@@ -34,12 +33,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+    /**
+     * Unbinds the preference listener.
+     */
     @Override
     public void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 
+    /**
+     * Registers the Preference Listener and sets the summary
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -53,6 +58,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         itemStyle.setSummary(sharedPreferences.getString(ITEM_STYLE, "Detailed"));
     }
 
+    /**
+     * Loads themes based on shared preferences.
+     */
     private void loadThemes() {
         String theme = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getString("app_theme", "Light");
         switch (theme) {

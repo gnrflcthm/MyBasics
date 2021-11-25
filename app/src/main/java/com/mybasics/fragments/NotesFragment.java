@@ -36,6 +36,11 @@ public class NotesFragment extends IndexableFragment {
 
     private ActivityResultLauncher<Intent> textEditorLauncher;
 
+    /**
+     * Creates an instance of notes fragment
+     * @param index index of the fragment
+     * @return NotesFragment instance
+     */
     public static NotesFragment newInstance(int index) {
         Bundle args = new Bundle();
         args.putInt("index", index);
@@ -73,12 +78,20 @@ public class NotesFragment extends IndexableFragment {
         return noteFragment;
     }
 
+    /**
+     * Launches the note editor for a new note.
+     * @param v view associated with the click event.
+     */
     private void openNewNote(View v) {
         Intent i = new Intent(context, NoteEditor.class);
         i.putExtra("new", true);
         textEditorLauncher.launch(i);
     }
 
+    /**
+     * Intializes the RecyclerView
+     * @param root view to be passed to the itemtouchhelper
+     */
     private void initializeRecyclerView(View root) {
         adapter = new NoteAdapter(context);
 
@@ -99,6 +112,10 @@ public class NotesFragment extends IndexableFragment {
         notesListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     }
 
+    /**
+     * Called when the NoteEditor has been closed.
+     * @param res Result of the activity.
+     */
     private void onActivityResult(ActivityResult res) {
         Log.d("RESULT CODE: ", "" + res.getResultCode());
         if (res.getResultCode() == Activity.RESULT_OK) {
@@ -119,6 +136,9 @@ public class NotesFragment extends IndexableFragment {
         }
     }
 
+    /**
+     * Toggles an empty text view depending on the items in the adapter.
+     */
     public void toggleEmptyList() {
         if (adapter.getItemCount() == 0) {
             notesListView.setVisibility(View.INVISIBLE);

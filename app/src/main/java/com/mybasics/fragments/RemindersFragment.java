@@ -30,7 +30,11 @@ public class RemindersFragment extends IndexableFragment {
 
     private Context context;
 
-
+    /**
+     * Creates a new instance of reminder fragment
+     * @param index index of the fragment
+     * @return RemindersFragment Instance
+     */
     public static RemindersFragment newInstance(int index) {
         Bundle args = new Bundle();
         RemindersFragment fragment = new RemindersFragment();
@@ -68,6 +72,10 @@ public class RemindersFragment extends IndexableFragment {
         return reminderFragment;
     }
 
+    /**
+     * Shows the add reminder dialog
+     * @param v view associated with the click event.
+     */
     private void showAddDialog(View v) {
         addDialog.setOnReminderSave((reminder, isInvalidTitle, isInvalidDate) -> {
             if (isInvalidTitle) {
@@ -90,6 +98,10 @@ public class RemindersFragment extends IndexableFragment {
         addDialog.show();
     }
 
+    /**
+     * Initializes RecyclerView
+     * @param container View to be passed to the itemtouchhelper
+     */
     private void initializeRecyclerView(View container) {
         adapter = new ReminderAdapter(context);
 
@@ -100,6 +112,9 @@ public class RemindersFragment extends IndexableFragment {
         remindersListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     }
 
+    /**
+     * Toggles the empty text view if there are no items in the adapter.
+     */
     public void toggleEmptyList() {
         if (adapter.getItemCount() == 0) {
             remindersListView.setVisibility(View.INVISIBLE);

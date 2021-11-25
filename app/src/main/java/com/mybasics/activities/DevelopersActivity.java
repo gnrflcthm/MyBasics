@@ -9,7 +9,7 @@ import com.mybasics.R;
 
 public class DevelopersActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+    private Toolbar toolbar;    // Toolbar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +18,7 @@ public class DevelopersActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.devActToolbar);
 
+        // Adds a listener to the navigation button of the toolbar
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 

@@ -21,6 +21,11 @@ import java.time.ZoneId;
 
 public class ReminderAlarm extends BroadcastReceiver {
 
+    /**
+     * Creates a notification to notify the user.
+     * @param context Context of the broadcast
+     * @param intent intent associated with the broadcast
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         String title = intent.getStringExtra("title");
@@ -45,6 +50,11 @@ public class ReminderAlarm extends BroadcastReceiver {
 
     }
 
+    /**
+     * Sets an alarm using AlarmManager
+     * @param reminder Reminder item containing data for the notification
+     * @param context Context to be used
+     */
     public static void setAlarm(Reminder reminder, Context context) {
         Intent intent = new Intent(context, ReminderAlarm.class);
         intent.putExtra("title", reminder.getTitle());
@@ -57,6 +67,11 @@ public class ReminderAlarm extends BroadcastReceiver {
         Log.d("ALARM SET", "" + true);
     }
 
+    /**
+     * Cancels the set alarm.
+     * @param reminder Reminder containing the data for cancellation
+     * @param context Context to ensure recreated intents are identical.
+     */
     public static void cancelAlarm(Reminder reminder, Context context) {
         Intent intent = new Intent(context, ReminderAlarm.class);
         intent.putExtra("title", reminder.getTitle());

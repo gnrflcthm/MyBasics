@@ -11,9 +11,10 @@ import com.mybasics.fragments.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private FragmentContainerView fragmentContainer;
-    private SettingsFragment settingsFragment;
+    private Toolbar toolbar;    // Toolbar
+    private FragmentContainerView fragmentContainer; // Fragment Container
+    private SettingsFragment settingsFragment;  // Fragment which holds all preferences
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +24,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Initializes Activity Components
+     */
     private void init() {
         toolbar = findViewById(R.id.settingsToolbar);
         fragmentContainer = findViewById(R.id.settingsFragmentContainer);

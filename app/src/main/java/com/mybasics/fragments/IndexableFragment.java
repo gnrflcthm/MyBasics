@@ -16,9 +16,17 @@ public abstract class IndexableFragment extends Fragment {
         this.index = index;
     }
 
+    /**
+     * Gets the index.
+     * @return index position of the fragment
+     */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * Sets the index.
+     * @param index new position of the fragment
+     */
     public void setIndex(int index) { this.index = index; }
 }

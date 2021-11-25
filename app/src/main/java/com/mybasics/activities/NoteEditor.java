@@ -54,6 +54,9 @@ public class NoteEditor extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Initializes Components
+     */
     private void init() {
         titleDisplay = findViewById(R.id.titleDisplay);
         titleEdit = findViewById(R.id.titleEdit);
@@ -78,6 +81,10 @@ public class NoteEditor extends AppCompatActivity {
         initialTextValue = textEditor.getCachedHtml();
     }
 
+    /**
+     * Handles the back button
+     * @param v View that the event is connected to
+     */
     private void returnOnClick(View v) {
         onPause();
     }
@@ -100,6 +107,10 @@ public class NoteEditor extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when user is about to leave the note editor.
+     * Sets Results for the activity.
+     */
     private void verifyResults() {
         if (!textEditor.getCachedHtml().equals(initialTextValue) ||
             !titleEdit.getText().toString().equals(initialTitle)) {
@@ -113,6 +124,10 @@ public class NoteEditor extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Saves value of text fields to the Note Item.
+     * @return boolean determining the if execution was successful
+     */
     private boolean saveNote() {
         try {
             String noteTitle = titleEdit.getText().toString();
@@ -125,6 +140,9 @@ public class NoteEditor extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialized Note title
+     */
     private void initializeTitle() {
         titleDisplay.setText(note.getTitle());
         titleEdit.setText(isNewlyCreated ? "" : titleDisplay.getText());
