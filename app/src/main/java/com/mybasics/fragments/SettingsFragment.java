@@ -13,7 +13,6 @@ import com.mybasics.R;
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final String APP_THEME = "app_theme";
-    private final String ITEM_STYLE = "item_style";
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
     @Override
@@ -26,9 +25,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     appTheme.setSummary("Current: " + sharedPreferences.getString(key, "Light"));
                     loadThemes();
                     break;
-                case ITEM_STYLE:
-                    Preference itemStyle = findPreference(key);
-                    itemStyle.setSummary(sharedPreferences.getString(key, "Detailed"));
             }
         });
     }
@@ -53,9 +49,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         Preference appTheme = findPreference(APP_THEME);
         appTheme.setSummary("Current: " + sharedPreferences.getString(APP_THEME, "light"));
-
-        Preference itemStyle = findPreference(ITEM_STYLE);
-        itemStyle.setSummary(sharedPreferences.getString(ITEM_STYLE, "Detailed"));
     }
 
     /**

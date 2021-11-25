@@ -13,14 +13,6 @@
             android:entryValues="@array/app_themes"
             android:defaultValue="Light"
             />
-        <DropDownPreference
-            android:key="item_style"
-            android:title="Detailed Item Style"
-            android:entries="@array/item_styles"
-            android:entryValues="@array/item_styles"
-            android:defaultValue="Detailed"
-            app:iconSpaceReserved="false"
-            />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="Extras"
