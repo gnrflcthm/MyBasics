@@ -68,7 +68,7 @@
                 android:textSize="16dp"
                 android:paddingVertical="8dp"
                 android:background="?attr/colorSecondaryVariant"
-                app:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?android:attr/selectableItemBackground"
                 />
         </LinearLayout>
 

@@ -35,7 +35,6 @@ sige ako na last chat‚ ako naman lagi. Sensya na ha ganito lang kase ako ehh, 
             android:layout_marginTop="4dp"
             android:paddingHorizontal="4dp"
             android:justificationMode="inter_word"
-            app:justificationMode="inter_word"
             app:layout_constraintTop_toBottomOf="@id/noteTitle"
             app:layout_constraintBottom_toBottomOf="parent"
             />
