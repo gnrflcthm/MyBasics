@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="70dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorPrimarySurface"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
@@ -80,7 +80,7 @@
                         android:lines="10"
                         android:text=""
                         android:textAlignment="center"
-                        android:textColor="@color/black_coral"
+                        android:textColor="?attr/colorOnPrimarySurface"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="235dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorPrimarySurface"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
@@ -110,7 +110,7 @@
 
                         android:text="TO-DO'S"
                         android:textAlignment="center"
-                        android:textColor="@color/newyork_pink"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -123,7 +123,7 @@
                         android:justificationMode="inter_word"
                         android:text="•	Click the button “ADD TO-DO” to add an item.\n•	Swipe right to check/uncheck the item.
 \n•	Swipe left to delete the item."
-                        android:textColor="@color/black_coral"
+                        android:textColor="?attr/colorOnPrimarySurface"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -135,7 +135,7 @@
                         android:layout_marginTop="8dp"
                         android:text="NOTES"
                         android:textAlignment="center"
-                        android:textColor="@color/newyork_pink"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -151,7 +151,7 @@
 •	Add your notes and feel free to use the Rich Text Editor above your keyboard to present your note in a more organized way.\n
 •	Click Save at the upper right when you are finished editing.\n
 •	Swipe left to delete an item."
-                        android:textColor="@color/black_coral"
+                        android:textColor="?attr/colorOnPrimarySurface"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
@@ -163,7 +163,7 @@
                         android:layout_marginTop="8dp"
                         android:text="REMINDERS"
                         android:textAlignment="center"
-                        android:textColor="@color/newyork_pink"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -179,7 +179,7 @@
 •	Set the Title, Date, and Time of the Reminder.\n
 •	Click Save to add it.\n
 •	Swipe left to delete a reminder."
-                        android:textColor="@color/black_coral"
+                        android:textColor="?attr/colorOnPrimarySurface"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
