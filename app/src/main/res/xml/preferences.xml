@@ -35,6 +35,7 @@
             android:title="About"
             app:iconSpaceReserved="false"
             >
+            <intent android:action=".activities.AboutActivity"/>
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
