@@ -32,7 +32,7 @@ public class ReminderAlarm extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "");
         builder.setSmallIcon(R.drawable.logo_transparent_48)
                 .setContentTitle(title)
-                .setContentText("Henlo");
+                .setContentText("You have something coming up.");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel = new NotificationChannel("mybasics", context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
             builder.setChannelId(channel.getId());
